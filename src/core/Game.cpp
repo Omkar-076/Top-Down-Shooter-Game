@@ -1,2 +1,4 @@
 #include "Game.h"
-//hope
+#include<SDL.h>
+#include<SDL_ttf.h>
+
