@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Input.h"
 #include<SDL.h>
 #include<SDL_ttf.h>
 #include<iostream>
@@ -8,6 +9,7 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
 	fontSmall = nullptr;
 	fontMedium = nullptr;
 	fontLarge = nullptr;
+    running = true;
 }
 
 void Game::init() {
@@ -37,4 +39,11 @@ void Game::init() {
 }
 void Game::run() {
 	std::cout << "World" << std::endl;
+    while (running){
+        Input::handleInput(running);
+        update();
+        render();
+    }
 }
+void Game::update(){}
+void Game::render(){}

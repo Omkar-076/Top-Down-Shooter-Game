@@ -9,8 +9,12 @@ class Game {
 	TTF_Font* fontSmall;
 	TTF_Font* fontMedium;
 	TTF_Font* fontLarge;
+	bool running;
 public:
 	Game();
 	void init();
 	void run();
+	
+	void update();
+	void render();
 };
