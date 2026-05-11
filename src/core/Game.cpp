@@ -5,15 +5,13 @@
 #include<iostream>
 Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
 	window = nullptr;
-	renderer = nullptr;
+    renderer = nullptr;
 	fontSmall = nullptr;
 	fontMedium = nullptr;
 	fontLarge = nullptr;
-    running = true;
+    running = true;    
 }
-
 void Game::init() {
-	std::cout << "Hello" << std::endl;
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
 		std::cout << "SDL INIT Failed" << std::endl;
 		exit(-1);
@@ -26,7 +24,9 @@ void Game::init() {
         WINDOW_WIDTH, WINDOW_HEIGHT,
         SDL_WINDOW_SHOWN
     );
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
     if (TTF_Init() == -1) {
         std::cout << "TTF Init Failed: " << TTF_GetError() << std::endl;
     }
@@ -38,12 +38,26 @@ void Game::init() {
     }
 }
 void Game::run() {
-	std::cout << "World" << std::endl;
+    Uint32 lastTime = SDL_GetTicks();
     while (running){
+        Uint32 currentTime = SDL_GetTicks();
+        float deltaTime = (currentTime - lastTime)/1000.0f;
+        lastTime = currentTime;
+
         Input::handleInput(running);
-        update();
+        update(deltaTime);
         render();
+        //std::cout << Input::movement << std::endl;
     }
 }
-void Game::update(){}
-void Game::render(){}
+void Game::update(float deltaTime){
+    
+}
+void Game::render(){
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    SDL_Rect rect = { 350 , 250, 100 ,100 };
+    SDL_RenderFillRect(renderer, &rect);
+    SDL_RenderPresent(renderer);
+}

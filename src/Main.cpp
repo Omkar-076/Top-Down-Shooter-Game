@@ -1,7 +1,7 @@
 // Top-Down Shooter Game.cpp : This file contains the 'main' function. Program execution begins and ends there.
 #define SDL_MAIN_HANDLED
 #include<iostream>
-#include "Game.h"
+#include "core/Game.h"
 
 int main(){
 	Game game;

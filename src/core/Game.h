@@ -15,6 +15,6 @@ public:
 	void init();
 	void run();
 	
-	void update();
+	void update(float);
 	void render();
 };
