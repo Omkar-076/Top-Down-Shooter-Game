@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "Input.h"
+#include "input.h"
 #include<SDL.h>
 #include<SDL_ttf.h>
 #include<iostream>
@@ -9,7 +9,7 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
 	fontSmall = nullptr;
 	fontMedium = nullptr;
 	fontLarge = nullptr;
-    running = true;    
+    running = true;
 }
 void Game::init() {
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
@@ -47,17 +47,15 @@ void Game::run() {
         Input::handleInput(running);
         update(deltaTime);
         render();
-        //std::cout << Input::movement << std::endl;
+
     }
 }
 void Game::update(float deltaTime){
-    
+    player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
 }
 void Game::render(){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-    SDL_Rect rect = { 350 , 250, 100 ,100 };
-    SDL_RenderFillRect(renderer, &rect);
+    player.render(renderer);
     SDL_RenderPresent(renderer);
 }

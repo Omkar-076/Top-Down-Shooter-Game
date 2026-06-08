@@ -1,8 +1,14 @@
 #include "Input.h"
 #include<SDL.h>
+#include<iostream>
 SDL_Event Input::event;
 const Uint8* Input::keystate = nullptr;
+Uint32 Input::currentMouseState = 0;
+Uint32 Input::lastMouseState = 0;
 int Input::movement = None;
+int Input::mx = 0;
+int Input::my = 0;
+bool Input::wantsToShoot = false;
 void Input::handleInput(bool& running) {
 	keystate = SDL_GetKeyboardState(NULL);
 	while (SDL_PollEvent(&event)) {
@@ -27,5 +33,16 @@ void Input::handleInput(bool& running) {
 	}
 	if (keystate[SDL_SCANCODE_D]) {
 		movement |= Right;
+	}
+
+
+	wantsToShoot = false;
+	
+	//Mouse Inputs
+	lastMouseState = currentMouseState;
+	currentMouseState = SDL_GetMouseState(&Input::mx, &Input::my);
+	bool click = (((lastMouseState & SDL_BUTTON_LEFT) != true) && ((currentMouseState & SDL_BUTTON_LEFT) == true));
+	if (click){
+		wantsToShoot = true;
 	}
 }

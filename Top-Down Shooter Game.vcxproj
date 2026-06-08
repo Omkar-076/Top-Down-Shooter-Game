@@ -135,7 +135,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\core\Game.cpp" />
     <ClCompile Include="src\core\Input.cpp" />
-    <ClCompile Include="src\core\Renderer.cpp" />
+    <ClCompile Include="src\core\Render.cpp" />
     <ClCompile Include="src\entities\Bullet.cpp" />
     <ClCompile Include="src\entities\Enemy.cpp" />
     <ClCompile Include="src\entities\Player.cpp" />
@@ -145,12 +145,13 @@
   <ItemGroup>
     <ClInclude Include="src\core\Game.h" />
     <ClInclude Include="src\core\Input.h" />
-    <ClInclude Include="src\core\Renderer.h" />
+    <ClInclude Include="src\core\Render.h" />
     <ClInclude Include="src\core\Timer.h" />
     <ClInclude Include="src\entities\Bullet.h" />
     <ClInclude Include="src\entities\Enemy.h" />
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entities\Player.h" />
+    <ClInclude Include="src\entities\ShootRequest.h" />
     <ClInclude Include="src\systems\Collision.h" />
     <ClInclude Include="src\systems\EntityManager.h" />
   </ItemGroup>

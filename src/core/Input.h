@@ -3,6 +3,8 @@
 class Input {
 	static SDL_Event event;
 	static const Uint8* keystate;
+	static Uint32 currentMouseState;
+	static Uint32 lastMouseState;
 	enum MoveState{	
 		None = 0,
 		Up = 1<<0,
@@ -11,6 +13,8 @@ class Input {
 		Left = 1<<3
 	};
 public:
+	static bool wantsToShoot;
+	static int mx, my;
 	static int movement;
 	static void handleInput(bool&);
 };

@@ -1,6 +1,8 @@
 #pragma once
 #include<SDL.h>
 #include<SDL_ttf.h>
+#include "..\entities\Player.h"
+#include "Input.h"
 class Game {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -11,6 +13,7 @@ class Game {
 	TTF_Font* fontLarge;
 	bool running;
 public:
+	Player player;
 	Game();
 	void init();
 	void run();
