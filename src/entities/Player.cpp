@@ -15,6 +15,7 @@ Player::Player() {
     offset = 55;
 }
 void Player::update(int movement, int mx, int my, bool wantsToShoot, float deltaTime) {
+    this->wantsToShoot = wantsToShoot;
     //Keyboard Updates
     if (movement & 1) {
         dY += -1;
@@ -35,7 +36,7 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
     }
     px += dX * speed * deltaTime;
     py += dY * speed * deltaTime;
-    cPx = px + pw / 2;
+    cPx = px + pw / 2;  
     cPy = py + ph / 2;
     dX = dY = 0.0f;
     
@@ -56,12 +57,26 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
         shootRequest.spawnY = cPy + offset*MdirY;
         shootRequest.dirX = MdirX;
         shootRequest.dirY = MdirY;  
-        //EntityManager.createBullet(shootRequest);
-        std::cout << "Pew!!" << std::endl;
     }
+}
+bool Player::hasShootRequest() {
+    if(wantsToShoot && (length >= 0.001))
+        return true;
+    return false;
+}
+
+ShootRequest Player::consumeShootRequest() {
+    wantsToShoot = false;
+    return shootRequest;
 }
 void Player::render(SDL_Renderer* renderer) {
    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
    SDL_Rect rect = { (int)px, (int)py, pw, ph };
    SDL_RenderFillRect(renderer, &rect);
+}
+float Player::getPx() {
+    return cPx;
+}
+float Player::getPy() {
+    return cPy;
 }

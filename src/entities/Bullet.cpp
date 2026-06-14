@@ -1,26 +1,36 @@
 #include<iostream>
-#include"../systems/EntityManager.h"
 #include"Bullet.h"
 #include"ShootRequest.h"
 Bullet::Bullet(ShootRequest request){
-	std::cout << request.dirX << std::endl;
-	px = request.spawnX;
-	py = request.spawnY;
+	bx = request.spawnX;
+	by = request.spawnY;
 	dirX = request.dirX;
 	dirY = request.dirY;
-	pw = 10.0;
-	ph = 10.0;
-	speed = 100.0;
-
-	
+	bw = 10.0;
+	bh = 10.0;
+	speed = 500.0;
+	isAlive = true;
+	rect = { (int)bx, (int)by, (int)bw, (int)bh };
 }
+
 void Bullet::update(float deltaTime) {
-	px += speed * deltaTime * dirX;
-	py += speed * deltaTime * dirY;
+	bx += speed * deltaTime * dirX;
+	by += speed * deltaTime * dirY;
+
+	rect = { (int)bx, (int)by, (int)bw, (int)bh };
+
+	if ((bx < (0 - bw))  || (bx > 800/*WINDOW_WIDTH*/) || (by < (0-bh)) || (by > 600/*WINDOW_HEIGHT*/)) {
+		isAlive = false;
+	}
+
 }
 void Bullet::render(SDL_Renderer* renderer) {
 	SDL_SetRenderDrawColor(renderer, 119, 119, 119, 255);
-	SDL_Rect rect = { (int)px, (int)py, pw, ph };
 	SDL_RenderFillRect(renderer, &rect);
-	SDL_RenderPresent(renderer);
+}
+bool Bullet::isDead() {
+	return !(isAlive);
+}
+void Bullet::markDead() {
+	isAlive = false;
 }

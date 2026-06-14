@@ -2,6 +2,7 @@
 #include<SDL.h>
 #include<SDL_ttf.h>
 #include "..\entities\Player.h"
+#include"..\systems\EntityManager.h"
 #include "Input.h"
 class Game {
 	SDL_Window* window;
@@ -12,8 +13,10 @@ class Game {
 	TTF_Font* fontMedium;
 	TTF_Font* fontLarge;
 	bool running;
-public:
+	EntityManager entityManager;
 	Player player;
+	ShootRequest request;
+public:
 	Game();
 	void init();
 	void run();

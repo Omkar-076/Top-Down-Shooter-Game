@@ -13,6 +13,10 @@ class Player {
 	ShootRequest shootRequest;
 public:
 	Player();
+	float getPx();
+	float getPy();
 	void update(int movement, int mx, int my, bool wantsToShoot, float deltaTime);
 	void render(SDL_Renderer *renderer);
+	bool hasShootRequest();
+	ShootRequest consumeShootRequest();
 };

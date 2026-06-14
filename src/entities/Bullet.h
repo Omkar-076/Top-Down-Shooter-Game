@@ -1,13 +1,16 @@
 #pragma once
-#include"../systems/EntityManager.h"
 #include<SDL.h>
 #include"ShootRequest.h"
 class Bullet {
-	float px, py, pw, ph;
+	float bx, by, bw, bh;
 	float dirX, dirY;
 	float speed;
-
+	bool isAlive;
+	
 public:
+	SDL_Rect rect;
+	bool isDead();
+	void markDead();
 	Bullet(ShootRequest request);
 	void update(float deltaTime);
 	void render(SDL_Renderer* renderer);

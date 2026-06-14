@@ -10,6 +10,7 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
 	fontMedium = nullptr;
 	fontLarge = nullptr;
     running = true;
+    request = { 0,0,0,0 };
 }
 void Game::init() {
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
@@ -52,10 +53,22 @@ void Game::run() {
 }
 void Game::update(float deltaTime){
     player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
+    if (player.hasShootRequest()){
+        request = player.consumeShootRequest();
+        entityManager.createBullet(request);
+        entityManager.createEnemy();
+    }
+    entityManager.updateBullets(deltaTime);
+    entityManager.updateEnemies(deltaTime, player.getPx(), player.getPy());
+    entityManager.checkCollision();
 }
 void Game::render(){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+
     player.render(renderer);
+    entityManager.renderBullets(renderer);
+    entityManager.renderEnemies(renderer);
+
     SDL_RenderPresent(renderer);
 }
