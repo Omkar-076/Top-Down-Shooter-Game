@@ -39,7 +39,9 @@ void Game::init() {
     }
 }
 void Game::run() {
+    gameState = PLAYING;
     Uint32 lastTime = SDL_GetTicks();
+    srand(SDL_GetTicks());
     while (running){
         Uint32 currentTime = SDL_GetTicks();
         float deltaTime = (currentTime - lastTime)/1000.0f;
@@ -52,15 +54,25 @@ void Game::run() {
     }
 }
 void Game::update(float deltaTime){
-    player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
-    if (player.hasShootRequest()){
-        request = player.consumeShootRequest();
-        entityManager.createBullet(request);
-        entityManager.createEnemy();
+    if (gameState == PLAYING) {
+        player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
+        if (player.hasShootRequest()) {
+            request = player.consumeShootRequest();
+            entityManager.createBullet(request);
+        }
+        entityManager.updatePlayer(player.rect);
+        entityManager.enemySpawner(deltaTime);
+        entityManager.updateBullets(deltaTime);
+        entityManager.updateEnemies(deltaTime, player.getPx(), player.getPy());
+        entityManager.checkCollision();
+
+        if (entityManager.isPlayerDead) {
+            gameState = GAME_OVER;
+        }
     }
-    entityManager.updateBullets(deltaTime);
-    entityManager.updateEnemies(deltaTime, player.getPx(), player.getPy());
-    entityManager.checkCollision();
+    else if (gameState == GAME_OVER) {
+        std::cout << "You Disappoint Me Son" << std::endl;
+    }
 }
 void Game::render(){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

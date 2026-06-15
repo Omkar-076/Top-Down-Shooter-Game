@@ -13,6 +13,8 @@ Player::Player() {
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
     offset = 55;
+    rect = { 0,0,0,0 };
+    isAlive = true;
 }
 void Player::update(int movement, int mx, int my, bool wantsToShoot, float deltaTime) {
     this->wantsToShoot = wantsToShoot;
@@ -58,6 +60,7 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
         shootRequest.dirX = MdirX;
         shootRequest.dirY = MdirY;  
     }
+    rect = { (int)px, (int)py, pw, ph };
 }
 bool Player::hasShootRequest() {
     if(wantsToShoot && (length >= 0.001))
@@ -71,7 +74,6 @@ ShootRequest Player::consumeShootRequest() {
 }
 void Player::render(SDL_Renderer* renderer) {
    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-   SDL_Rect rect = { (int)px, (int)py, pw, ph };
    SDL_RenderFillRect(renderer, &rect);
 }
 float Player::getPx() {
@@ -79,4 +81,10 @@ float Player::getPx() {
 }
 float Player::getPy() {
     return cPy;
+}
+void Player::markDead() {
+    isAlive = false;
+}
+bool Player::isDead() {
+    return !isAlive;
 }

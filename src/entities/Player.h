@@ -10,13 +10,19 @@ class Player {
 	float length;
 	bool wantsToShoot;
 	float offset;
+	bool isAlive;
 	ShootRequest shootRequest;
+	
 public:
+	SDL_Rect rect;
+
 	Player();
 	float getPx();
 	float getPy();
 	void update(int movement, int mx, int my, bool wantsToShoot, float deltaTime);
 	void render(SDL_Renderer *renderer);
 	bool hasShootRequest();
+	void markDead();
+	bool isDead();
 	ShootRequest consumeShootRequest();
 };

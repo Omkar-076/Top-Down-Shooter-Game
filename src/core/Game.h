@@ -13,9 +13,12 @@ class Game {
 	TTF_Font* fontMedium;
 	TTF_Font* fontLarge;
 	bool running;
-	EntityManager entityManager;
 	Player player;
 	ShootRequest request;
+	enum GameState { PLAYING, GAME_OVER };
+	GameState gameState;
+	EntityManager entityManager;
+
 public:
 	Game();
 	void init();

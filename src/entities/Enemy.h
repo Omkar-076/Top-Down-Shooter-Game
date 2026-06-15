@@ -8,7 +8,7 @@ class Enemy {
 	
 public:
 	SDL_Rect rect;
-	Enemy();
+	Enemy(float ex, float ey);
 	bool isDead();
 	void markDead();
 	void update(float deltaTime, float px, float py);

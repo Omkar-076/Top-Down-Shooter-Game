@@ -1,9 +1,9 @@
 #include"Enemy.h"
 #include<iostream>
 #include<SDL.h>
-Enemy::Enemy() {
-	ex = 365;
-	ey = 0;
+Enemy::Enemy(float ex, float ey) {
+	this->ex = ex;
+	this->ey = ey;
 	ew = 25;
 	eh = 25;
 	dirX = dirY = length = 0;
