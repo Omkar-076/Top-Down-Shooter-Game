@@ -18,11 +18,13 @@ class Game {
 	enum GameState { PLAYING, GAME_OVER };
 	GameState gameState;
 	EntityManager entityManager;
+	int score;
 
 public:
 	Game();
 	void init();
 	void run();
+	void restart();
 	
 	void update(float);
 	void render();

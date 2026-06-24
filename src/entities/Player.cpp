@@ -88,3 +88,19 @@ void Player::markDead() {
 bool Player::isDead() {
     return !isAlive;
 }
+
+void Player::restart() {
+    px = 350;
+    py = 250;
+    cPx = cPy = 0;
+    MdirX = MdirY = 0;
+    pw = ph = 75;
+    dX = dY = 0;
+    speed = 200.0f;
+    length = 0.0f;
+    wantsToShoot = false;
+    shootRequest = { 0,0,0,0 };
+    offset = 55;
+    rect = { 0,0,0,0 };
+    isAlive = true;
+}

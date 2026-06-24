@@ -25,4 +25,5 @@ public:
 	void markDead();
 	bool isDead();
 	ShootRequest consumeShootRequest();
+	void restart();
 };

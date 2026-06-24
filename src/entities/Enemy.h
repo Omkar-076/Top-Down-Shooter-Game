@@ -5,6 +5,9 @@ class Enemy {
 	float dirX, dirY,length;
 	float speed;
 	bool isAlive;
+	int scoreValue;
+	enum Type {NORMAL};
+	Type EnemyType;
 	
 public:
 	SDL_Rect rect;
@@ -13,4 +16,5 @@ public:
 	void markDead();
 	void update(float deltaTime, float px, float py);
 	void render(SDL_Renderer* renderer);
+	int getScoreValue();
 };
