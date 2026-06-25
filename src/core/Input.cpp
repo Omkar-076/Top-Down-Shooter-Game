@@ -1,18 +1,22 @@
 #include "Input.h"
 #include<SDL.h>
-#include<iostream>
+#include<vector>
 SDL_Event Input::event;
-const Uint8* Input::lastKeystate = 0;
+std::vector<Uint8> Input::lastKeystate;
 Uint32 Input::currentMouseState = 0;
 Uint32 Input::lastMouseState = 0;
-const Uint8* Input::keystate = 0;
+const Uint8* Input::keystate = nullptr;
 int Input::movement = None;
 int Input::mx = 0;
 int Input::my = 0;
 bool Input::wantsToShoot = false;
-bool Input::wantsToRestart = false;
+int Input::keystateSize = 0;
+void Input::init() {
+	keystate = SDL_GetKeyboardState(&keystateSize);
+	lastKeystate.resize(keystateSize);
+}
 void Input::handleInput(bool& running) {
-	lastKeystate = keystate;
+	
 	keystate = SDL_GetKeyboardState(NULL);
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
@@ -38,11 +42,6 @@ void Input::handleInput(bool& running) {
 		movement |= Right;
 	}
 
-	wantsToRestart = false;
-	if (!lastKeystate[SDL_SCANCODE_R] && keystate[SDL_SCANCODE_R]) {
-		wantsToRestart = true;
-	}
-
 	wantsToShoot = false;
 	
 	//Mouse Inputs
@@ -51,5 +50,15 @@ void Input::handleInput(bool& running) {
 	bool click = (((lastMouseState & SDL_BUTTON_LEFT) != true) && ((currentMouseState & SDL_BUTTON_LEFT) == true));
 	if (click){
 		wantsToShoot = true;
+	}	
+}
+
+bool Input::keyPressed(SDL_Scancode key) {
+	return (!lastKeystate[key] && keystate[key]);
+}
+
+void Input::endFrame() {
+	for (int i = 0; i < keystateSize; i++) {
+		lastKeystate[i] = keystate[i];
 	}
 }

@@ -19,7 +19,7 @@ class Game {
 	GameState gameState;
 	EntityManager entityManager;
 	int score;
-
+	SDL_Rect restartRect;
 public:
 	Game();
 	void init();

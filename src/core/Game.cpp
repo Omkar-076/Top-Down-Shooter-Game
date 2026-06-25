@@ -14,6 +14,7 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
     request = { 0,0,0,0 };
     gameState = PLAYING;
     score = 0;
+    restartRect = { 340,325,120,50 };
 }
 void Game::init() {
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
@@ -40,6 +41,7 @@ void Game::init() {
     if (!(fontSmall && fontMedium && fontLarge)) {
         std::cout << "Font Load Failed: " << TTF_GetError() << std::endl;
     }
+    Input::init();
 }
 void Game::run() {
     gameState = PLAYING;
@@ -53,7 +55,7 @@ void Game::run() {
         Input::handleInput(running);
         update(deltaTime);
         render();
-
+        Input::endFrame();
     }
 }
 
@@ -62,7 +64,6 @@ void Game::restart() {
     entityManager.restart();
     gameState = PLAYING;
     score = 0;
-    Input::wantsToRestart = false;
 }
 
 void Game::update(float deltaTime){
@@ -78,9 +79,11 @@ void Game::update(float deltaTime){
         }
     }
     else if (gameState == GAME_OVER) {
-        if (Input::wantsToRestart) {
+        if (Input::keyPressed(SDL_SCANCODE_R)) {
             restart();
-            Input::wantsToRestart = false;
+        }
+        if ((Input::wantsToShoot)&&(Input::mx >= restartRect.x && Input::mx <= (restartRect.x + restartRect.w)) && (Input::my >= restartRect.y && Input::my <= (restartRect.y + restartRect.h))) {
+            restart();
         }
     }
 }
@@ -145,7 +148,7 @@ void Game::render(){
         SDL_FreeSurface(surface);
         SDL_DestroyTexture(texture);
 
-        SDL_Rect restartRect = { 340,325,120,50 };
+       
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_RenderFillRect(renderer, &restartRect);
 

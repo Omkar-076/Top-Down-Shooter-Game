@@ -1,9 +1,10 @@
 #pragma once
 #include<SDL.h>
+#include<vector>
 class Input {
 	static SDL_Event event;
 	static const Uint8* keystate;
-	static const Uint8* lastKeystate;
+	static std::vector<Uint8> lastKeystate;
 	static Uint32 currentMouseState;
 	static Uint32 lastMouseState;
 	enum MoveState{	
@@ -13,10 +14,13 @@ class Input {
 		Down = 1<<2,
 		Left = 1<<3
 	};
+	static int keystateSize;
 public:
 	static bool wantsToShoot;
-	static bool wantsToRestart;
 	static int mx, my;
 	static int movement;
+	static void init();
 	static void handleInput(bool&);
+	static bool keyPressed(SDL_Scancode);
+	static void endFrame();
 };
