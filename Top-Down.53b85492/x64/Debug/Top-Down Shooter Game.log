@@ -1,5 +1,6 @@
-﻿  Main.cpp
-  Game.cpp
-  Input.cpp
-  Generating Code...
+﻿  Game.cpp
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(20,27): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(21,27): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(22,27): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(23,27): warning C4305: 'initializing': truncation from 'double' to 'float'
   Top-Down Shooter Game.vcxproj -> C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\x64\Debug\Top-Down Shooter Game.exe

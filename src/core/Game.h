@@ -20,11 +20,19 @@ class Game {
 	EntityManager entityManager;
 	int score;
 	SDL_Rect restartRect;
+	struct waveInfo {
+		int enemyNumber;
+		float spawnInterval;
+	};
+	std::vector<waveInfo> waves;
+	int waveNumber;
 public:
 	Game();
 	void init();
 	void run();
 	void restart();
+
+	void startWave(waveInfo);
 	
 	void update(float);
 	void render();

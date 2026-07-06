@@ -4,9 +4,18 @@
 #include"../entities/Player.h"
 
 EntityManager::EntityManager(){
-	spawnInterval = 1.0;
+	spawnInterval = 1.5;
 	spawnTimer = 0;
 	isPlayerDead = false;
+	enemiesToSpawn = 0;
+}
+void EntityManager::updateEnemySpawner(int enemyNumber, float spawnInterval) {
+	enemiesToSpawn = enemyNumber;
+	this->spawnInterval = spawnInterval;
+}
+
+bool EntityManager::shouldWaveEnd() {
+	return (enemiesToSpawn == 0 && enemyVector.size() == 0);
 }
 void EntityManager::createBullet(ShootRequest shootRequest) {
 	Bullet bullet(shootRequest);
@@ -39,6 +48,8 @@ void EntityManager::enemySpawner(float deltaTime) {
 	while (spawnTimer >= spawnInterval) {
 		createEnemy();
 		spawnTimer -= spawnInterval;
+		if(enemiesToSpawn>0)
+			enemiesToSpawn--;
 	}
 }
 
@@ -126,8 +137,9 @@ int EntityManager::checkCollision(SDL_Rect playerRect){
 }
 
 int EntityManager::update(SDL_Rect playerRect, float deltaTime) {
-
-	enemySpawner(deltaTime);
+	if (enemiesToSpawn != 0) {
+		enemySpawner(deltaTime);
+	}
 	updateBullets(deltaTime);
 	updateEnemies(deltaTime, (playerRect.x + playerRect.w/2),( playerRect.y + playerRect.h/2));
 	return checkCollision(playerRect);

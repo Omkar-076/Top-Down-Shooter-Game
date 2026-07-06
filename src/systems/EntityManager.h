@@ -9,6 +9,7 @@ class EntityManager {
 	std::vector<Bullet> bulletVector;
 	std::vector<Enemy> enemyVector;
 	float spawnInterval, spawnTimer;
+	int enemiesToSpawn;
 	bool isPlayerDead;
 public:
 
@@ -24,7 +25,11 @@ public:
 	void createEnemy();
 	void updateEnemies(float deltaTime, float px, float py);
 	void renderEnemies(SDL_Renderer* renderer);
+
+	void updateEnemySpawner(int enemyNumber, float spawnInterval);
+
 	bool hasPlayerDied();
+	bool shouldWaveEnd();
 	int checkCollision(SDL_Rect playerRect);
 
 	void restart();

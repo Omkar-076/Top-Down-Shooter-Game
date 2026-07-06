@@ -15,6 +15,12 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
     gameState = PLAYING;
     score = 0;
     restartRect = { 340,325,120,50 };
+    waveNumber = 0;
+    waves.push_back({ 10, 1.5 });
+    waves.push_back({ 15, 1.2 });
+    waves.push_back({ 15, 1.2 });
+    waves.push_back({ 20, 0.8 });
+    waves.push_back({ 20, 0.4 });
 }
 void Game::init() {
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
@@ -59,6 +65,13 @@ void Game::run() {
     }
 }
 
+void Game::startWave(waveInfo wave) {
+    if ((entityManager.shouldWaveEnd()) && !(waveNumber>=waves.size())) {
+        std::cout << "New Wave Started" << std::endl;
+        entityManager.updateEnemySpawner(wave.enemyNumber, wave.spawnInterval);
+    }
+}
+
 void Game::restart() {
     player.restart();
     entityManager.restart();
@@ -67,6 +80,7 @@ void Game::restart() {
 }
 
 void Game::update(float deltaTime){
+    int i = 0;
     if (gameState == PLAYING) {
         player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
         if (player.hasShootRequest()) {
@@ -76,6 +90,10 @@ void Game::update(float deltaTime){
         score += entityManager.update(player.rect, deltaTime);
         if (entityManager.hasPlayerDied()) {
             gameState = GAME_OVER;
+        }
+        if (waveNumber == 0||entityManager.shouldWaveEnd()) {
+            startWave(waves[i]);
+            i++;
         }
     }
     else if (gameState == GAME_OVER) {
