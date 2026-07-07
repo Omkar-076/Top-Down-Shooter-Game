@@ -12,10 +12,10 @@ class Player {
 	float offset;
 	bool isAlive;
 	ShootRequest shootRequest;
-	
+	SDL_Texture* texture;
 public:
 	SDL_Rect rect;
-
+	void setTexture(SDL_Texture* texture);
 	Player();
 	float getPx();
 	float getPy();

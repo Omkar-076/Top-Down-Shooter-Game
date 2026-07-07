@@ -8,6 +8,7 @@ class Enemy {
 	int scoreValue;
 	enum Type {NORMAL};
 	Type EnemyType;
+	SDL_Texture* texture;
 	
 public:
 	SDL_Rect rect;
@@ -15,6 +16,7 @@ public:
 	bool isDead();
 	void markDead();
 	void update(float deltaTime, float px, float py);
-	void render(SDL_Renderer* renderer);
+	void render(SDL_Renderer* renderer, SDL_Texture* texture);
 	int getScoreValue();
+	void setTexture(SDL_Texture* texture);
 };

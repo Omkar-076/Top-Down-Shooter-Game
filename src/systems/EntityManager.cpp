@@ -8,10 +8,14 @@ EntityManager::EntityManager(){
 	spawnTimer = 0;
 	isPlayerDead = false;
 	enemiesToSpawn = 0;
+	maxOpeningBurst = 10.0;
+	enemyTexture = bulletTexture = nullptr;
 }
-void EntityManager::updateEnemySpawner(int enemyNumber, float spawnInterval) {
+void EntityManager::configWave(int enemyNumber, float spawnInterval, int waveNumber) {
 	enemiesToSpawn = enemyNumber;
 	this->spawnInterval = spawnInterval;
+	spawnTimer += (waveNumber / 4) * 3 * spawnInterval;
+	spawnTimer = std::min(maxOpeningBurst*spawnInterval, spawnTimer);
 }
 
 bool EntityManager::shouldWaveEnd() {
@@ -37,7 +41,7 @@ void EntityManager::updateBullets(float deltaTime) {
 void EntityManager::renderBullets(SDL_Renderer* renderer) {
 	for (int i = 0; i < bulletVector.size(); i++)
 	{
-		bulletVector[i].render(renderer);
+		bulletVector[i].render(renderer, bulletTexture);
 	}
 }
 
@@ -45,12 +49,14 @@ void EntityManager::renderBullets(SDL_Renderer* renderer) {
 
 void EntityManager::enemySpawner(float deltaTime) {
 	spawnTimer += deltaTime;
-	while (spawnTimer >= spawnInterval) {
-		createEnemy();
-		spawnTimer -= spawnInterval;
-		if(enemiesToSpawn>0)
+	if (enemiesToSpawn > 0) {
+		while (spawnTimer >= spawnInterval) {
+			createEnemy();
+			spawnTimer -= spawnInterval;
 			enemiesToSpawn--;
+		}
 	}
+	
 }
 
 void EntityManager::createEnemy() {
@@ -102,10 +108,16 @@ void EntityManager::updateEnemies(float deltaTime, float px, float py) {
 		}	
 	}
 }
+
+void EntityManager::setTextures(SDL_Texture* enemyTexture, SDL_Texture* bulletTexture) {
+		this->enemyTexture = enemyTexture;
+		this->bulletTexture = bulletTexture;
+}
+
 void EntityManager::renderEnemies(SDL_Renderer* renderer) {
 	for (int i = 0; i < enemyVector.size(); i++)
 	{
-		enemyVector[i].render(renderer);
+		enemyVector[i].render(renderer,enemyTexture);
 	}
 }
 
@@ -137,9 +149,8 @@ int EntityManager::checkCollision(SDL_Rect playerRect){
 }
 
 int EntityManager::update(SDL_Rect playerRect, float deltaTime) {
-	if (enemiesToSpawn != 0) {
-		enemySpawner(deltaTime);
-	}
+	
+	enemySpawner(deltaTime);
 	updateBullets(deltaTime);
 	updateEnemies(deltaTime, (playerRect.x + playerRect.w/2),( playerRect.y + playerRect.h/2));
 	return checkCollision(playerRect);

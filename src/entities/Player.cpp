@@ -6,15 +6,16 @@ Player::Player() {
     py = 250;
     cPx = cPy = 0;
     MdirX = MdirY = 0;
-    pw = ph = 75;
+    pw = ph = 60;
     dX = dY = 0;
     speed = 200.0f;
     length = 0.0f;
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
-    offset = 55;
+    offset = 40;
     rect = { 0,0,0,0 };
     isAlive = true;
+    texture = nullptr;
 }
 void Player::update(int movement, int mx, int my, bool wantsToShoot, float deltaTime) {
     this->wantsToShoot = wantsToShoot;
@@ -73,12 +74,11 @@ ShootRequest Player::consumeShootRequest() {
     return shootRequest;
 }
 void Player::render(SDL_Renderer* renderer) {
-   SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-   SDL_RenderFillRect(renderer, &rect);
+    SDL_RenderCopy(renderer, texture, nullptr, &rect);
 }
 float Player::getPx() {
     return cPx;
-}
+}   
 float Player::getPy() {
     return cPy;
 }
@@ -103,4 +103,8 @@ void Player::restart() {
     offset = 55;
     rect = { 0,0,0,0 };
     isAlive = true;
+}
+
+void Player::setTexture(SDL_Texture* texture) {
+    this->texture = texture;
 }

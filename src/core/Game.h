@@ -1,9 +1,8 @@
 #pragma once
-#include<SDL.h>
 #include<SDL_ttf.h>
 #include "..\entities\Player.h"
 #include"..\systems\EntityManager.h"
-#include "Input.h"
+#include"..\systems\TextureManager.h"
 class Game {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -18,21 +17,19 @@ class Game {
 	enum GameState { PLAYING, GAME_OVER };
 	GameState gameState;
 	EntityManager entityManager;
+	TextureManager textureManager;
 	int score;
 	SDL_Rect restartRect;
-	struct waveInfo {
-		int enemyNumber;
-		float spawnInterval;
-	};
-	std::vector<waveInfo> waves;
 	int waveNumber;
+	int baseCount;
+	float minInterval, maxInterval, intervalMultiplier, enemyMultiplier;
 public:
 	Game();
 	void init();
 	void run();
 	void restart();
 
-	void startWave(waveInfo);
+	void startWave(int);
 	
 	void update(float);
 	void render();

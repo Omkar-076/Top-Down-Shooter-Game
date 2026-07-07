@@ -15,12 +15,13 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
     gameState = PLAYING;
     score = 0;
     restartRect = { 340,325,120,50 };
-    waveNumber = 0;
-    waves.push_back({ 10, 1.5 });
-    waves.push_back({ 15, 1.2 });
-    waves.push_back({ 15, 1.2 });
-    waves.push_back({ 20, 0.8 });
-    waves.push_back({ 20, 0.4 });
+    waveNumber = 1;
+
+    baseCount = 5;
+    minInterval = 0.3;
+    maxInterval = 1.8;
+    intervalMultiplier= 0.2;
+    enemyMultiplier=3;
 }
 void Game::init() {
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
@@ -48,8 +49,17 @@ void Game::init() {
         std::cout << "Font Load Failed: " << TTF_GetError() << std::endl;
     }
     Input::init();
+
+    textureManager.load(renderer, "player", "assets/images/Player.png");
+    player.setTexture(textureManager.get("player"));
+
+    std::cout << textureManager.load(renderer, "enemy", "assets/images/Enemy.png") << std::endl;
+    textureManager.load(renderer, "bullet","assets/images/Bullet.png");
+    entityManager.setTextures(textureManager.get("enemy"),textureManager.get("bullet"));
+
 }
 void Game::run() {
+
     gameState = PLAYING;
     Uint32 lastTime = SDL_GetTicks();
     srand((unsigned int)time(NULL));
@@ -65,11 +75,13 @@ void Game::run() {
     }
 }
 
-void Game::startWave(waveInfo wave) {
-    if ((entityManager.shouldWaveEnd()) && !(waveNumber>=waves.size())) {
-        std::cout << "New Wave Started" << std::endl;
-        entityManager.updateEnemySpawner(wave.enemyNumber, wave.spawnInterval);
-    }
+void Game::startWave(int waveNumber) {
+    int enemyNumber;
+    float spawnInterval;
+    enemyNumber = baseCount + enemyMultiplier*(waveNumber-1);
+    spawnInterval = std::max(minInterval, maxInterval-intervalMultiplier*(waveNumber/2));
+    entityManager.configWave(enemyNumber, spawnInterval, waveNumber);
+    std::cout << "Wave " << waveNumber << std::endl;
 }
 
 void Game::restart() {
@@ -77,10 +89,10 @@ void Game::restart() {
     entityManager.restart();
     gameState = PLAYING;
     score = 0;
+    waveNumber = 4;
 }
 
 void Game::update(float deltaTime){
-    int i = 0;
     if (gameState == PLAYING) {
         player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
         if (player.hasShootRequest()) {
@@ -91,9 +103,9 @@ void Game::update(float deltaTime){
         if (entityManager.hasPlayerDied()) {
             gameState = GAME_OVER;
         }
-        if (waveNumber == 0||entityManager.shouldWaveEnd()) {
-            startWave(waves[i]);
-            i++;
+        if ((entityManager.shouldWaveEnd())){
+            startWave(waveNumber);
+            waveNumber++;
         }
     }
     else if (gameState == GAME_OVER) {

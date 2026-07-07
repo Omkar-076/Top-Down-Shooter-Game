@@ -6,12 +6,13 @@ class Bullet {
 	float dirX, dirY;
 	float speed;
 	bool isAlive;
-	
+
 public:
 	SDL_Rect rect;
 	bool isDead();
 	void markDead();
 	Bullet(ShootRequest request);
 	void update(float deltaTime);
-	void render(SDL_Renderer* renderer);
+	void render(SDL_Renderer* renderer, SDL_Texture* texture);
+	void setTexture(SDL_Texture* texture);
 };

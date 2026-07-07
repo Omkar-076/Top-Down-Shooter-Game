@@ -11,6 +11,9 @@ class EntityManager {
 	float spawnInterval, spawnTimer;
 	int enemiesToSpawn;
 	bool isPlayerDead;
+	float maxOpeningBurst;
+	SDL_Texture* enemyTexture;
+	SDL_Texture* bulletTexture;
 public:
 
 	EntityManager();
@@ -26,11 +29,12 @@ public:
 	void updateEnemies(float deltaTime, float px, float py);
 	void renderEnemies(SDL_Renderer* renderer);
 
-	void updateEnemySpawner(int enemyNumber, float spawnInterval);
+	void configWave(int enemyNumber, float spawnInterval, int waveNumber);
 
 	bool hasPlayerDied();
 	bool shouldWaveEnd();
 	int checkCollision(SDL_Rect playerRect);
 
+	void setTextures(SDL_Texture* enemyTexture, SDL_Texture* bulletTexture);
 	void restart();
 };
