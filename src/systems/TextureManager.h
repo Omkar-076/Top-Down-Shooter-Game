@@ -9,7 +9,7 @@ public:
 		const std::string& name,
 		const std::string& filepath);
 
-	SDL_Texture* get(std::string name);
+	SDL_Texture* get(const std::string& name);
 	void clear();
 	
 	~TextureManager();

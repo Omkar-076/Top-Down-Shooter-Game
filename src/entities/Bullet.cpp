@@ -6,11 +6,12 @@ Bullet::Bullet(ShootRequest request){
 	by = request.spawnY;
 	dirX = request.dirX;
 	dirY = request.dirY;
-	bw = 24.0;
+	bw = 18.0;
 	bh = 6.0;
-	speed = 500.0;
+	speed = 550.0;
 	isAlive = true;
 	rect = { (int)bx, (int)by, (int)bw, (int)bh };
+	rotation = atan2(dirY, dirX)*180/M_PI;
 }
 
 void Bullet::update(float deltaTime) {
@@ -26,7 +27,7 @@ void Bullet::update(float deltaTime) {
 }
 
 void Bullet::render(SDL_Renderer* renderer, SDL_Texture* texture) {
-	SDL_RenderCopy(renderer, texture, nullptr, &rect);
+	SDL_RenderCopyEx(renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
 }
 bool Bullet::isDead() {
 	return !(isAlive);

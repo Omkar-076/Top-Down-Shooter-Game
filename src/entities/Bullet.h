@@ -6,6 +6,7 @@ class Bullet {
 	float dirX, dirY;
 	float speed;
 	bool isAlive;
+	float rotation;
 
 public:
 	SDL_Rect rect;
@@ -14,5 +15,4 @@ public:
 	Bullet(ShootRequest request);
 	void update(float deltaTime);
 	void render(SDL_Renderer* renderer, SDL_Texture* texture);
-	void setTexture(SDL_Texture* texture);
 };

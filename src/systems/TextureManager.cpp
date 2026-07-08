@@ -18,7 +18,7 @@ bool TextureManager::load(SDL_Renderer* renderer, const std::string& name, const
     return true;
 }
 
-SDL_Texture* TextureManager::get(std::string name) {
+SDL_Texture* TextureManager::get(const std::string& name) {
     auto required =  textures.find(name);
     if (required != textures.end()) {
         return required->second;

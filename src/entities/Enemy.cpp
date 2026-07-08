@@ -4,13 +4,13 @@
 Enemy::Enemy(float ex, float ey) {
 	this->ex = ex;
 	this->ey = ey;
-	ew = 25;
-	eh = 25;
+	ew = 35;
+	eh = 35;
 	dirX = dirY = length = 0;
 	isAlive = true;
 	speed = 60;
 	rect = { (int)ex, (int)ey, (int)ew, (int)eh };
-	texture = nullptr;
+	rotation = 0;
 	EnemyType = NORMAL; //Later can make a system to decide between types.
 	switch(EnemyType){
 	case NORMAL:
@@ -37,14 +37,12 @@ void Enemy::update(float deltaTime, float px, float py) {
 		ex += dirX * speed * deltaTime;
 		ey += dirY * speed * deltaTime;
 		rect = { (int)ex, (int)ey, (int)ew, (int)eh };
+		rotation = atan2(dirY, dirX) * 180 / M_PI - 60;
 	}
 }
-void Enemy::setTexture(SDL_Texture* enemyTexture) {
-	texture = enemyTexture;
-	std::cout << enemyTexture << std::endl;
-}
+
 void Enemy::render(SDL_Renderer* renderer, SDL_Texture* texture) {
-	SDL_RenderCopy(renderer, texture, nullptr, &rect);
+	SDL_RenderCopyEx(renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
 }
 bool Enemy::isDead() {
 	return (!isAlive);

@@ -2,20 +2,21 @@
 #include<iostream>
 #include<SDL.h>
 Player::Player() {
-    px = 350;
-    py = 250;
     cPx = cPy = 0;
     MdirX = MdirY = 0;
-    pw = ph = 60;
+    pw = ph = 45;
+    px = 400 - pw / 2;
+    py = 300 - ph / 2;
     dX = dY = 0;
-    speed = 200.0f;
+    speed = 150.0f;
     length = 0.0f;
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
-    offset = 40;
+    offset = 30;
     rect = { 0,0,0,0 };
     isAlive = true;
     texture = nullptr;
+    rotation = 0;
 }
 void Player::update(int movement, int mx, int my, bool wantsToShoot, float deltaTime) {
     this->wantsToShoot = wantsToShoot;
@@ -61,6 +62,7 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
         shootRequest.dirX = MdirX;
         shootRequest.dirY = MdirY;  
     }
+    rotation = atan2(MdirY, MdirX) * 180/M_PI + 90;
     rect = { (int)px, (int)py, pw, ph };
 }
 bool Player::hasShootRequest() {
@@ -74,7 +76,7 @@ ShootRequest Player::consumeShootRequest() {
     return shootRequest;
 }
 void Player::render(SDL_Renderer* renderer) {
-    SDL_RenderCopy(renderer, texture, nullptr, &rect);
+    SDL_RenderCopyEx(renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
 }
 float Player::getPx() {
     return cPx;

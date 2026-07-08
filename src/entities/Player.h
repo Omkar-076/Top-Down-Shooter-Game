@@ -13,6 +13,7 @@ class Player {
 	bool isAlive;
 	ShootRequest shootRequest;
 	SDL_Texture* texture;
+	float rotation;
 public:
 	SDL_Rect rect;
 	void setTexture(SDL_Texture* texture);

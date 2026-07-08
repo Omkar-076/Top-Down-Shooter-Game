@@ -23,6 +23,9 @@ class Game {
 	int waveNumber;
 	int baseCount;
 	float minInterval, maxInterval, intervalMultiplier, enemyMultiplier;
+	SDL_Rect bgRect;
+	SDL_Surface* bgSurface;
+	SDL_Texture* bgTexture;
 public:
 	Game();
 	void init();
