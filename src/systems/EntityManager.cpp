@@ -22,7 +22,6 @@ void EntityManager::configWave(int enemyNumber, float spawnInterval, float speed
 	enemySpeed = std::min(maxSpeed, enemySpeed);
 	spawnTimer += (waveNumber / 4) * 3 * spawnInterval;
 	spawnTimer = std::min(maxOpeningBurst*spawnInterval, spawnTimer);
-	std::cout << enemySpeed << "\n"<<speedMultiplier << std::endl;
 }
 
 bool EntityManager::shouldWaveEnd() {
