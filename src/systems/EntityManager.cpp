@@ -1,7 +1,6 @@
 #include"EntityManager.h"
 #include"../entities/Bullet.h"
 #include"Collision.h"
-#include"../entities/Player.h"
 
 EntityManager::EntityManager(){
 	spawnInterval = 1.5;
@@ -10,15 +9,24 @@ EntityManager::EntityManager(){
 	enemiesToSpawn = 0;
 	maxOpeningBurst = 10.0;
 	enemyTexture = bulletTexture = nullptr;
+	enemiesDeadThisFrame = 0;
+	enemySpeed = 60;
+	baseEnemySpeed = 60;
+	maxSpeed = 85;
+
 }
-void EntityManager::configWave(int enemyNumber, float spawnInterval, int waveNumber) {
+void EntityManager::configWave(int enemyNumber, float spawnInterval, float speedMultiplier, int waveNumber) {
 	enemiesToSpawn = enemyNumber;
 	this->spawnInterval = spawnInterval;
+	enemySpeed = baseEnemySpeed + baseEnemySpeed*speedMultiplier;
+	enemySpeed = std::min(maxSpeed, enemySpeed);
 	spawnTimer += (waveNumber / 4) * 3 * spawnInterval;
 	spawnTimer = std::min(maxOpeningBurst*spawnInterval, spawnTimer);
+	std::cout << enemySpeed << "\n"<<speedMultiplier << std::endl;
 }
 
 bool EntityManager::shouldWaveEnd() {
+	
 	return (enemiesToSpawn == 0 && enemyVector.size() == 0);
 }
 void EntityManager::createBullet(ShootRequest shootRequest) {
@@ -49,14 +57,11 @@ void EntityManager::renderBullets(SDL_Renderer* renderer) {
 
 void EntityManager::enemySpawner(float deltaTime) {
 	spawnTimer += deltaTime;
-	if (enemiesToSpawn > 0) {
-		while (spawnTimer >= spawnInterval) {
-			createEnemy();
-			spawnTimer -= spawnInterval;
-			enemiesToSpawn--;
-		}
+	while (spawnTimer >= spawnInterval && enemiesToSpawn > 0) {
+		createEnemy();
+		spawnTimer -= spawnInterval;
+		enemiesToSpawn--;
 	}
-	
 }
 
 void EntityManager::createEnemy() {
@@ -91,11 +96,12 @@ void EntityManager::createEnemy() {
 		ey = (int)(rand()) % 600;
 	}
 	
-	Enemy enemy(ex, ey);
+	Enemy enemy(ex, ey, enemySpeed);
 	enemyVector.push_back(enemy);
 }
 
 void EntityManager::updateEnemies(float deltaTime, float px, float py) {
+	enemiesDeadThisFrame = 0;
 	for (int i = 0; i < enemyVector.size(); i++)
 	{
 		enemyVector[i].update(deltaTime, px, py);
@@ -105,6 +111,7 @@ void EntityManager::updateEnemies(float deltaTime, float px, float py) {
 		if (enemyVector[i].isDead()) {
 			enemyVector.erase(enemyVector.begin() + i);
 			i -= 1;
+			enemiesDeadThisFrame += 1;
 		}	
 	}
 }
@@ -120,7 +127,9 @@ void EntityManager::renderEnemies(SDL_Renderer* renderer) {
 		enemyVector[i].render(renderer,enemyTexture);
 	}
 }
-
+int EntityManager::enemiesDiedThisFrame() {
+	return enemiesDeadThisFrame;
+}
 bool EntityManager::hasPlayerDied() {
 	return isPlayerDead;
 }
@@ -131,6 +140,9 @@ int EntityManager::checkCollision(SDL_Rect playerRect){
 	int scoreEarnedThisFrame = 0;
 	for (int i = 0; i < enemyVector.size(); i++) {
 		for (int j = 0; j < bulletVector.size(); j++) {
+			if (bulletVector[j].isDead()) {
+				continue;
+			}
 			if (Collision::isColliding(enemyVector[i].rect, bulletVector[j].rect)) {
 				bulletVector[j].markDead();
 				enemyVector[i].markDead();
@@ -141,6 +153,9 @@ int EntityManager::checkCollision(SDL_Rect playerRect){
 	}
 
 	for (int i = 0; i < enemyVector.size(); i++){
+		if (enemyVector[i].isDead()) {
+			continue;
+		}
 		if (Collision::isColliding(playerRect, enemyVector[i].rect)) {
 			isPlayerDead = true;
 		}
@@ -161,4 +176,7 @@ void EntityManager::restart() {
 	enemyVector.clear();
 	isPlayerDead = false;
 	spawnTimer = 0;
+	enemiesToSpawn = 0;
+	spawnInterval = 1.5;
+	enemySpeed = 60;
 }

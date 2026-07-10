@@ -1,6 +1,10 @@
-﻿  Game.cpp
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(22,19): warning C4305: '=': truncation from 'double' to 'float'
+﻿  Main.cpp
+  Game.cpp
 C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(23,19): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(24,25): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(98,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(24,19): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(25,25): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(27,23): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(126,29): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\core\Game.cpp(130,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   Top-Down Shooter Game.vcxproj -> C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\x64\Debug\Top-Down Shooter Game.exe

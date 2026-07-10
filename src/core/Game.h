@@ -3,6 +3,7 @@
 #include "..\entities\Player.h"
 #include"..\systems\EntityManager.h"
 #include"..\systems\TextureManager.h"
+#include"..\systems\AudioManager.h"
 class Game {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -18,14 +19,17 @@ class Game {
 	GameState gameState;
 	EntityManager entityManager;
 	TextureManager textureManager;
+	AudioManager audioManager;
 	int score;
 	SDL_Rect restartRect;
 	int waveNumber;
-	int baseCount;
-	float minInterval, maxInterval, intervalMultiplier, enemyMultiplier;
+	int baseCount,maxEnemiesPerWave;
+	float minInterval, maxInterval, intervalMultiplier, enemyMultiplier,speedMultiplier;
 	SDL_Rect bgRect;
 	SDL_Surface* bgSurface;
 	SDL_Texture* bgTexture;
+	const int MUSIC_VOLUME;
+	const int SOUND_VOLUME;
 public:
 	Game();
 	void init();
@@ -36,4 +40,6 @@ public:
 	
 	void update(float);
 	void render();
+
+	~Game();
 };

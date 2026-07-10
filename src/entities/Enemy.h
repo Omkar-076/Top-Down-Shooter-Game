@@ -12,7 +12,7 @@ class Enemy {
 	
 public:
 	SDL_Rect rect;
-	Enemy(float ex, float ey);
+	Enemy(float ex, float ey, float speed);
 	bool isDead();
 	void markDead();
 	void update(float deltaTime, float px, float py);

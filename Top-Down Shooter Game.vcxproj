@@ -104,14 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\SDL\SDL2\include;C:\SDL\SDL2_ttf\include;C:\SDL\SDL2_image\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\SDL\SDL2\include;C:\SDL\SDL2_ttf\include;C:\SDL\SDL2_image\include;C:\SDL\SDL2_mixer\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\SDL\SDL2_ttf\lib\x64;C:\SDL\SDL2\lib\x64;C:\SDL\SDL2_image\lib\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;C:\SDL\SDL2_ttf\lib\x64\SDL2_ttf.lib;C:\SDL\SDL2_image\lib\x64\SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\SDL\SDL2_ttf\lib\x64;C:\SDL\SDL2\lib\x64;C:\SDL\SDL2_image\lib\x64;C:\SDL\SDL2_mixer\lib\x64</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;C:\SDL\SDL2_ttf\lib\x64\SDL2_ttf.lib;C:\SDL\SDL2_image\lib\x64\SDL2_image.lib;C:\SDL\SDL2_mixer\lib\x64\SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,6 +140,7 @@
     <ClCompile Include="src\entities\Bullet.cpp" />
     <ClCompile Include="src\entities\Enemy.cpp" />
     <ClCompile Include="src\entities\Player.cpp" />
+    <ClCompile Include="src\systems\AudioManager.cpp" />
     <ClCompile Include="src\systems\Collision.cpp" />
     <ClCompile Include="src\systems\EntityManager.cpp" />
     <ClCompile Include="src\systems\TextureManager.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="src\entities\Entity.h" />
     <ClInclude Include="src\entities\Player.h" />
     <ClInclude Include="src\entities\ShootRequest.h" />
+    <ClInclude Include="src\systems\AudioManager.h" />
     <ClInclude Include="src\systems\Collision.h" />
     <ClInclude Include="src\systems\EntityManager.h" />
     <ClInclude Include="src\systems\TextureManager.h" />

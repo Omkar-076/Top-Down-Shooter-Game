@@ -1,14 +1,14 @@
 #include"Enemy.h"
 #include<iostream>
 #include<SDL.h>
-Enemy::Enemy(float ex, float ey) {
+Enemy::Enemy(float ex, float ey, float speed) {
 	this->ex = ex;
 	this->ey = ey;
+	this->speed = speed;
 	ew = 35;
 	eh = 35;
 	dirX = dirY = length = 0;
 	isAlive = true;
-	speed = 60;
 	rect = { (int)ex, (int)ey, (int)ew, (int)eh };
 	rotation = 0;
 	EnemyType = NORMAL; //Later can make a system to decide between types.

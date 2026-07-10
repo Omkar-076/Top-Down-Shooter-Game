@@ -92,19 +92,20 @@ bool Player::isDead() {
 }
 
 void Player::restart() {
-    px = 350;
-    py = 250;
+    px = 400 - pw/2;
+    py = 300 - ph/2;
     cPx = cPy = 0;
     MdirX = MdirY = 0;
-    pw = ph = 75;
+    pw = ph = 45;
     dX = dY = 0;
-    speed = 200.0f;
+    speed = 150.0f;
     length = 0.0f;
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
-    offset = 55;
+    offset = 30;
     rect = { 0,0,0,0 };
     isAlive = true;
+    rotation = 0;
 }
 
 void Player::setTexture(SDL_Texture* texture) {

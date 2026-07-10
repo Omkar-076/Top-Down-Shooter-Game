@@ -5,7 +5,8 @@
 #include<iostream>
 #include<string>
 #include<SDL_image.h>
-Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
+#include<SDL_mixer.h>
+Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600), MUSIC_VOLUME(32), SOUND_VOLUME(50){
 	window = nullptr;
     renderer = nullptr;
 	fontSmall = nullptr;
@@ -21,12 +22,16 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600){
     baseCount = 5;
     minInterval = 0.3;
     maxInterval = 1.8;
-    intervalMultiplier= 0.2;
+    intervalMultiplier= 0.35;
     enemyMultiplier=3;
+    speedMultiplier = 0.20;
+    maxEnemiesPerWave = 50;
 
     bgRect = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
     bgSurface = nullptr;
     bgTexture = nullptr;
+
+    
 }
 void Game::init() {
 	if(SDL_Init(SDL_INIT_VIDEO)<0){
@@ -37,12 +42,22 @@ void Game::init() {
 	window = SDL_CreateWindow(  
         "ZombieLand Survival",
         SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED, 
         WINDOW_WIDTH, WINDOW_HEIGHT,
         SDL_WINDOW_SHOWN
     );
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+    int requestedFlags = IMG_INIT_PNG;
+    int flags = IMG_Init(requestedFlags);
+    if ((flags & requestedFlags) != requestedFlags) {
+        std::cout << "IMG Init Failed: " << IMG_GetError() << std::endl;
+    }
+
+    if (Mix_OpenAudio(44100, AUDIO_S16SYS, 2, 2048) < 0) {
+        std::cout << "MIX INIT Failed: " << Mix_GetError() << std::endl;
+    }
 
     if (TTF_Init() == -1) {
         std::cout << "TTF Init Failed: " << TTF_GetError() << std::endl;
@@ -55,6 +70,8 @@ void Game::init() {
     }
     Input::init();
 
+    //Load in all images
+    
     bgSurface = IMG_Load("assets/images/background.png");
     if (!bgSurface) {
         std::cout << "Surface creation Failed: " << IMG_GetError() << std::endl;
@@ -74,10 +91,20 @@ void Game::init() {
     textureManager.load(renderer, "bullet","assets/images/Bullet.png");
     entityManager.setTextures(textureManager.get("enemy"),textureManager.get("bullet"));
 
+    //Load in all Audio
+
+    audioManager.loadSound("gunshot", "assets/audio/sounds/gunshot.mp3");
+    audioManager.loadSound("gameOver", "assets/audio/sounds/gameOver.mp3");
+    audioManager.loadSound("enemyDeath", "assets/audio/sounds/enemyDeath.mp3");
+    audioManager.loadMusic("background", "assets/audio/music/background.mp3");
+    audioManager.setMusicVolume(MUSIC_VOLUME);
+    audioManager.setSoundVolume(SOUND_VOLUME);
+
 }
 void Game::run() {
 
     gameState = PLAYING;
+    audioManager.playMusic("background");
     Uint32 lastTime = SDL_GetTicks();
     srand((unsigned int)time(NULL));
     while (running){
@@ -95,33 +122,49 @@ void Game::run() {
 void Game::startWave(int waveNumber) {
     int enemyNumber;
     float spawnInterval;
+    float enemySpeedMultiplier = 0;
     enemyNumber = baseCount + enemyMultiplier*(waveNumber-1);
+    enemyNumber = std::min(maxEnemiesPerWave, enemyNumber);
     spawnInterval = std::max(minInterval, maxInterval-intervalMultiplier*(waveNumber/2));
-    entityManager.configWave(enemyNumber, spawnInterval, waveNumber);
+    if (waveNumber >= 15) {
+        enemySpeedMultiplier = speedMultiplier * ((waveNumber-15) *2 / 5.0 );
+    }
+    entityManager.configWave(enemyNumber, spawnInterval, enemySpeedMultiplier, waveNumber);
+    
 }
 
 void Game::restart() {
     player.restart();
     entityManager.restart();
+    request = { 0,0,0,0 };
     gameState = PLAYING;
     score = 0;
-    waveNumber = 1;
+    waveNumber = 14;
+    bgRect = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
 }
 
 void Game::update(float deltaTime){
     if (gameState == PLAYING) {
+
         player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
         if (player.hasShootRequest()) {
             request = player.consumeShootRequest();
+            audioManager.playSound("gunshot");
             entityManager.createBullet(request);
         }
         score += entityManager.update(player.rect, deltaTime);
         if (entityManager.hasPlayerDied()) {
             gameState = GAME_OVER;
+            audioManager.playSound("gameOver");
         }
         if ((entityManager.shouldWaveEnd())){
             startWave(waveNumber);
             waveNumber++;
+        }
+        int temp = entityManager.enemiesDiedThisFrame();
+        while (temp > 0) {
+            audioManager.playSound("enemyDeath");
+            temp--;
         }
     }
     else if (gameState == GAME_OVER) {
@@ -249,4 +292,15 @@ void Game::render(){
     }
 
     SDL_RenderPresent(renderer);
+}
+Game::~Game() {
+    SDL_DestroyTexture(bgTexture);
+    TTF_CloseFont(fontSmall);
+    TTF_CloseFont(fontMedium);
+    TTF_CloseFont(fontLarge);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }
