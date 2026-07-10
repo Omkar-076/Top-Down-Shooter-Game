@@ -1,9 +1,8 @@
-﻿  EntityManager.cpp
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(75,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(79,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(85,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(89,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(95,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(169,74): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\systems\EntityManager.cpp(169,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  Player.cpp
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\entities\Player.cpp(8,14): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\entities\Player.cpp(9,14): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\entities\Player.cpp(66,48): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\entities\Player.cpp(71,30): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\entities\Player.cpp(151,14): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\src\entities\Player.cpp(152,14): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Top-Down Shooter Game.vcxproj -> C:\Users\Omkar\VSCoding\Projects\Top-Down Shooter Game\x64\Debug\Top-Down Shooter Game.exe

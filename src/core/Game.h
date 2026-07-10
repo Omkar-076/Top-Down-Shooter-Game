@@ -1,5 +1,6 @@
 #pragma once
 #include<SDL_ttf.h>
+#include<array>
 #include "..\entities\Player.h"
 #include"..\systems\EntityManager.h"
 #include"..\systems\TextureManager.h"
@@ -25,6 +26,7 @@ class Game {
 	int waveNumber;
 	int baseCount,maxEnemiesPerWave;
 	float minInterval, maxInterval, intervalMultiplier, enemyMultiplier,speedMultiplier;
+	std::array<SDL_Texture*,8> playerTextures;
 	SDL_Rect bgRect;
 	SDL_Surface* bgSurface;
 	SDL_Texture* bgTexture;

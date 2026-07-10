@@ -84,9 +84,25 @@ void Game::init() {
     }
     SDL_FreeSurface(bgSurface);
 
-    textureManager.load(renderer, "player", "assets/images/Player.png");
-    player.setTexture(textureManager.get("player"));
+    textureManager.load(renderer, "playerRight", "assets/images/Player sprite/Player Right.png");
+    textureManager.load(renderer, "playerUpRight", "assets/images/Player sprite/Player Up-Right.png");
+    textureManager.load(renderer, "playerUp", "assets/images/Player sprite/Player Up.png");
+    textureManager.load(renderer, "playerUpLeft", "assets/images/Player sprite/Player Up-Left.png");
+    textureManager.load(renderer, "playerLeft", "assets/images/Player sprite/Player Left.png"); 
+    textureManager.load(renderer, "playerDownLeft", "assets/images/Player sprite/Player Down-Left.png");
+    textureManager.load(renderer, "playerDown", "assets/images/Player sprite/Player Down.png");
+    textureManager.load(renderer, "playerDownRight", "assets/images/Player sprite/Player Down-Right.png");
 
+    playerTextures[0]= textureManager.get("playerRight");
+    playerTextures[1] = textureManager.get("playerUpRight");
+    playerTextures[2] = textureManager.get("playerUp");
+    playerTextures[3] = textureManager.get("playerUpLeft");
+    playerTextures[4] = textureManager.get("playerLeft");
+    playerTextures[5] = textureManager.get("playerDownLeft");
+    playerTextures[6] = textureManager.get("playerDown");
+    playerTextures[7] = textureManager.get("playerDownRight");
+
+    player.setTextures(playerTextures);
     textureManager.load(renderer, "enemy", "assets/images/Enemy.png");
     textureManager.load(renderer, "bullet","assets/images/Bullet.png");
     entityManager.setTextures(textureManager.get("enemy"),textureManager.get("bullet"));
@@ -139,7 +155,7 @@ void Game::restart() {
     request = { 0,0,0,0 };
     gameState = PLAYING;
     score = 0;
-    waveNumber = 14;
+    waveNumber = 1;
     bgRect = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
 }
 

@@ -57,7 +57,7 @@ void EntityManager::renderBullets(SDL_Renderer* renderer) {
 void EntityManager::enemySpawner(float deltaTime) {
 	spawnTimer += deltaTime;
 	while (spawnTimer >= spawnInterval && enemiesToSpawn > 0) {
-		createEnemy();
+		//createEnemy();
 		spawnTimer -= spawnInterval;
 		enemiesToSpawn--;
 	}

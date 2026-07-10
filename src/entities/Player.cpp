@@ -4,7 +4,7 @@
 Player::Player() {
     cPx = cPy = 0;
     MdirX = MdirY = 0;
-    pw = ph = 45;
+    pw = ph = 80;
     px = 400 - pw / 2;
     py = 300 - ph / 2;
     dX = dY = 0;
@@ -12,11 +12,12 @@ Player::Player() {
     length = 0.0f;
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
-    offset = 30;
+    offsetX = offsetY = 0;
     rect = { 0,0,0,0 };
     isAlive = true;
-    texture = nullptr;
+    textures = {};
     rotation = 0;
+    direction = RIGHT;
 }
 void Player::update(int movement, int mx, int my, bool wantsToShoot, float deltaTime) {
     this->wantsToShoot = wantsToShoot;
@@ -57,13 +58,68 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
     }
     if (wantsToShoot) {
         //Determine bullet spawn location
-        shootRequest.spawnX = cPx + offset*MdirX;
-        shootRequest.spawnY = cPy + offset*MdirY;
+        shootRequest.spawnX = cPx + offsetX;
+        shootRequest.spawnY = cPy + offsetY;
         shootRequest.dirX = MdirX;
         shootRequest.dirY = MdirY;  
     }
-    rotation = atan2(MdirY, MdirX) * 180/M_PI + 90;
+    rotation = -atan2(MdirY, MdirX) * 180/M_PI +90;
+    int temp;
+    if (rotation < 0) {
+        rotation += 360;
+    }
+    temp = (rotation + 22.5) / 45;
+    temp = (temp + 6) % 8;
+    std::cout << temp << std::endl;
     rect = { (int)px, (int)py, pw, ph };
+
+    switch (temp) {
+    case 0:
+        direction = RIGHT;
+        offsetX = 26;
+        offsetY = -7;
+        break;
+    case 1:
+        direction = UP_RIGHT;
+        offsetX = 7;
+        offsetY = -35;
+        break;
+    case 2:
+        direction = UP;
+        offsetX = -7;
+        offsetY = -35;
+        break;
+    case 3:
+        direction = UP_LEFT;
+        offsetX = -28;
+        offsetY = -33;
+        break;
+    case 4:
+        direction = LEFT;
+        offsetX = -35;
+        offsetY = -6;
+        break;
+    case 5:
+        direction = DOWN_LEFT;
+        offsetX = -32;
+        offsetY = 15;
+        break;
+    case 6:
+        direction = DOWN;
+        offsetX = -6;
+        offsetY = 20;
+        break;
+    case 7:
+        direction = DOWN_RIGHT;
+        offsetX = 12;
+        offsetY = 10;
+        break;
+    default:
+        direction = RIGHT;
+        offsetX = 26;
+        offsetY = -7;
+        break;
+    }
 }
 bool Player::hasShootRequest() {
     if(wantsToShoot && (length >= 0.001))
@@ -76,7 +132,7 @@ ShootRequest Player::consumeShootRequest() {
     return shootRequest;
 }
 void Player::render(SDL_Renderer* renderer) {
-    SDL_RenderCopyEx(renderer, texture, nullptr, &rect, rotation, nullptr, SDL_FLIP_NONE);
+    SDL_RenderCopy(renderer, textures[direction], nullptr, &rect);
 }
 float Player::getPx() {
     return cPx;
@@ -102,12 +158,12 @@ void Player::restart() {
     length = 0.0f;
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
-    offset = 30;
+    offsetX = offsetY =  0;
     rect = { 0,0,0,0 };
     isAlive = true;
     rotation = 0;
 }
 
-void Player::setTexture(SDL_Texture* texture) {
-    this->texture = texture;
+void Player::setTextures(const std::array<SDL_Texture*,8>& textures) {
+    this->textures = textures;
 }

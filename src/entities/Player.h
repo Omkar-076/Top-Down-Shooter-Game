@@ -1,6 +1,7 @@
 #pragma once
 #include<SDL.h>
 #include"ShootRequest.h"
+#include<array>
 class Player {
 	float px, py, dX, dY;
 	float cPx, cPy;
@@ -9,14 +10,25 @@ class Player {
 	float speed;
 	float length;
 	bool wantsToShoot;
-	float offset;
+	float offsetX,offsetY;
 	bool isAlive;
 	ShootRequest shootRequest;
-	SDL_Texture* texture;
+	std::array <SDL_Texture* , 8 > textures;
 	float rotation;
+	enum Direction {
+		RIGHT,
+		UP_RIGHT,
+		UP,
+		UP_LEFT,
+		LEFT,
+		DOWN_LEFT,
+		DOWN,
+		DOWN_RIGHT
+	};
+	Direction direction;
 public:
 	SDL_Rect rect;
-	void setTexture(SDL_Texture* texture);
+	void setTextures(const std::array<SDL_Texture*, 8>& textures);
 	Player();
 	float getPx();
 	float getPy();
