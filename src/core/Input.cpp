@@ -9,6 +9,7 @@ const Uint8* Input::keystate = nullptr;
 int Input::movement = None;
 int Input::mx = 0;
 int Input::my = 0;
+bool Input::toggleFullScreenPressed = false;
 bool Input::wantsToShoot = false;
 int Input::keystateSize = 0;
 void Input::init() {
@@ -27,7 +28,12 @@ void Input::handleInput(bool& running) {
 				running = false;
 			}
 		}
-	}
+		if (event.type == SDL_KEYDOWN) {
+			if (event.key.keysym.sym == SDLK_F11) {
+				toggleFullScreenPressed = true;
+			}
+		}
+			}
 	movement = None;
 	if (keystate[SDL_SCANCODE_W]){
 		movement |= Up;

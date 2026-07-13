@@ -2,5 +2,5 @@
 #include<SDL.h>
 class Collision {
 public:
-	static bool isColliding(SDL_Rect rect1, SDL_Rect rect2);
+	static bool isColliding(const SDL_Rect& rect1, const SDL_Rect& rect2);
 };

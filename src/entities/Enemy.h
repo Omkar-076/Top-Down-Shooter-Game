@@ -6,14 +6,18 @@ class Enemy {
 	float speed;
 	bool isAlive;
 	int scoreValue;
-	enum Type {NORMAL};
-	Type EnemyType;
+	
 	float rotation;
+	int health;
 	
 public:
+	enum EnemyType { NORMAL, TANK };
+	EnemyType type;
 	SDL_Rect rect;
-	Enemy(float ex, float ey, float speed);
+	SDL_Rect hitbox;
+	Enemy(float ex, float ey, float speed, EnemyType type );
 	bool isDead();
+	bool takeDamage();
 	void markDead();
 	void update(float deltaTime, float px, float py);
 	void render(SDL_Renderer* renderer, SDL_Texture* texture);

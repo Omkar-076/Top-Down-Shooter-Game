@@ -1,6 +1,7 @@
 #include"EntityManager.h"
 #include"../entities/Bullet.h"
 #include"Collision.h"
+#include"../entities/Enemy.h"
 
 EntityManager::EntityManager(){
 	spawnInterval = 1.5;
@@ -13,6 +14,8 @@ EntityManager::EntityManager(){
 	enemySpeed = 60;
 	baseEnemySpeed = 60;
 	maxSpeed = 85;
+	tankChance = 0;
+	maxTankChance = 60;
 
 }
 void EntityManager::configWave(int enemyNumber, float spawnInterval, float speedMultiplier, int waveNumber) {
@@ -22,6 +25,7 @@ void EntityManager::configWave(int enemyNumber, float spawnInterval, float speed
 	enemySpeed = std::min(maxSpeed, enemySpeed);
 	spawnTimer += (waveNumber / 4) * 3 * spawnInterval;
 	spawnTimer = std::min(maxOpeningBurst*spawnInterval, spawnTimer);
+	tankChance = std::min(maxTankChance, (10 *  (int)((waveNumber-1) / 4)));
 }
 
 bool EntityManager::shouldWaveEnd() {
@@ -36,7 +40,7 @@ void EntityManager::updateBullets(float deltaTime) {
 	for (int i = 0; i < bulletVector.size(); i++)
 	{
 		bulletVector[i].update(deltaTime);
-	}
+		}
 	for (int i = 0; i < bulletVector.size(); i++)
 	{
 		if (bulletVector[i].isDead()) {
@@ -57,7 +61,7 @@ void EntityManager::renderBullets(SDL_Renderer* renderer) {
 void EntityManager::enemySpawner(float deltaTime) {
 	spawnTimer += deltaTime;
 	while (spawnTimer >= spawnInterval && enemiesToSpawn > 0) {
-		//createEnemy();
+		createEnemy();
 		spawnTimer -= spawnInterval;
 		enemiesToSpawn--;
 	}
@@ -67,8 +71,16 @@ void EntityManager::createEnemy() {
 	float ex, ey;
 	enum side { LEFT, UP, RIGHT, DOWN };
 	side side;
-	int decider = rand() % 4;
-	switch (decider) {
+	Enemy::EnemyType type;
+	int sideDecider = rand() % 4;
+	int typeDecider = rand() % 100  + 1;
+	if (typeDecider <= tankChance) {
+		type = Enemy::EnemyType::TANK;
+	}
+	else {
+		type = Enemy::EnemyType::NORMAL;
+	}
+	switch (sideDecider) {
 	case 0:
 		side = LEFT;
 		ex = -50;
@@ -93,9 +105,9 @@ void EntityManager::createEnemy() {
 		side = UP;
 		ex = -50;
 		ey = (int)(rand()) % 600;
+		break;
 	}
-	
-	Enemy enemy(ex, ey, enemySpeed);
+	Enemy enemy(ex, ey, enemySpeed, type);
 	enemyVector.push_back(enemy);
 }
 
@@ -144,8 +156,9 @@ int EntityManager::checkCollision(SDL_Rect playerRect){
 			}
 			if (Collision::isColliding(enemyVector[i].rect, bulletVector[j].rect)) {
 				bulletVector[j].markDead();
-				enemyVector[i].markDead();
-				scoreEarnedThisFrame += enemyVector[i].getScoreValue();
+				if (enemyVector[i].takeDamage()) {
+					scoreEarnedThisFrame += enemyVector[i].getScoreValue();
+				}
 				break;
 			}
 		}
@@ -169,6 +182,7 @@ int EntityManager::update(SDL_Rect playerRect, float deltaTime) {
 	updateEnemies(deltaTime, (playerRect.x + playerRect.w/2),( playerRect.y + playerRect.h/2));
 	return checkCollision(playerRect);
 }
+
 
 void EntityManager::restart() {
 	bulletVector.clear();

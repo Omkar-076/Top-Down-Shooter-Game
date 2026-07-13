@@ -16,6 +16,7 @@ class Input {
 	};
 	static int keystateSize;
 public:
+	static bool toggleFullScreenPressed;
 	static bool wantsToShoot;
 	static int mx, my;
 	static int movement;

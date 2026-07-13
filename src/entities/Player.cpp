@@ -13,7 +13,9 @@ Player::Player() {
     wantsToShoot = false;
     shootRequest = { 0,0,0,0 };
     offsetX = offsetY = 0;
-    rect = { 0,0,0,0 };
+    rect = { (int)px,(int)py,pw,ph };
+
+    hitbox = { 0,0,0,0 };
     isAlive = true;
     textures = {};
     rotation = 0;
@@ -41,6 +43,7 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
     }
     px += dX * speed * deltaTime;
     py += dY * speed * deltaTime;
+    hitbox = { (int)px + 20, (int)py + 15, 40, 55 };
     cPx = px + pw / 2;  
     cPy = py + ph / 2;
     dX = dY = 0.0f;
@@ -56,12 +59,23 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
     else {
         MdirX = MdirY = 0;
     }
+
     if (wantsToShoot) {
         //Determine bullet spawn location
         shootRequest.spawnX = cPx + offsetX;
         shootRequest.spawnY = cPy + offsetY;
-        shootRequest.dirX = MdirX;
-        shootRequest.dirY = MdirY;  
+        BdirX = (float)mx - shootRequest.spawnX - 7.5;//7.5 is to make sure direction is calculated based on bullet center.
+        BdirY = (float)my - shootRequest.spawnY - 1.5;
+        length = sqrt(BdirX * BdirX + BdirY * BdirY);
+        if (length >= 0.001) {
+            BdirX /= length;
+            BdirY /= length;
+        }
+        else {
+            BdirX = BdirY = 0;
+        }
+        shootRequest.dirX = BdirX;
+        shootRequest.dirY = BdirY;  
     }
     rotation = -atan2(MdirY, MdirX) * 180/M_PI +90;
     int temp;
@@ -70,7 +84,6 @@ void Player::update(int movement, int mx, int my, bool wantsToShoot, float delta
     }
     temp = (rotation + 22.5) / 45;
     temp = (temp + 6) % 8;
-    std::cout << temp << std::endl;
     rect = { (int)px, (int)py, pw, ph };
 
     switch (temp) {
@@ -150,9 +163,9 @@ bool Player::isDead() {
 void Player::restart() {
     px = 400 - pw/2;
     py = 300 - ph/2;
-    cPx = cPy = 0;
+    cPx = cPy = 0;  
     MdirX = MdirY = 0;
-    pw = ph = 45;
+    pw = ph = 80;
     dX = dY = 0;
     speed = 150.0f;
     length = 0.0f;

@@ -8,12 +8,14 @@
 class Game {
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	const int WINDOW_HEIGHT;
-	const int WINDOW_WIDTH;
+	float logicalMouseX, logicalMouseY;
+	const int WORLD_HEIGHT;
+	const int WORLD_WIDTH;
 	TTF_Font* fontSmall;
 	TTF_Font* fontMedium;
 	TTF_Font* fontLarge;
 	bool running;
+	bool isFullScreen;
 	Player player;
 	ShootRequest request;
 	enum GameState { PLAYING, GAME_OVER };
@@ -36,6 +38,7 @@ public:
 	Game();
 	void init();
 	void run();
+	void toggleFullScreen();
 	void restart();
 
 	void startWave(int);

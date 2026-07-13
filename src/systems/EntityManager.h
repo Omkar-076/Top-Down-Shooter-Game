@@ -14,6 +14,8 @@ class EntityManager {
 	int enemiesDeadThisFrame;
 	float maxOpeningBurst;
 	float enemySpeed,maxSpeed,baseEnemySpeed;
+	float tankChance;
+	int maxTankChance;
 	SDL_Texture* enemyTexture;
 	SDL_Texture* bulletTexture;
 public:

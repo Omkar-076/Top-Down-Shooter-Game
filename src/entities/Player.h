@@ -7,6 +7,7 @@ class Player {
 	float cPx, cPy;
 	int pw, ph;
 	float MdirX, MdirY;
+	float BdirX, BdirY;
 	float speed;
 	float length;
 	bool wantsToShoot;
@@ -28,6 +29,7 @@ class Player {
 	Direction direction;
 public:
 	SDL_Rect rect;
+	SDL_Rect hitbox;
 	void setTextures(const std::array<SDL_Texture*, 8>& textures);
 	Player();
 	float getPx();

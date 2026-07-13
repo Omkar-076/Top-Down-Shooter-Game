@@ -6,8 +6,8 @@ Bullet::Bullet(ShootRequest request){
 	by = request.spawnY;
 	dirX = request.dirX;
 	dirY = request.dirY;
-	bw = 18.0;
-	bh = 6.0;
+	bw = 15.0;
+	bh = 4.0;
 	speed = 550.0;
 	isAlive = true;
 	rect = { (int)bx, (int)by, (int)bw, (int)bh };

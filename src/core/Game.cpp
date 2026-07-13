@@ -6,18 +6,21 @@
 #include<string>
 #include<SDL_image.h>
 #include<SDL_mixer.h>
-Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600), MUSIC_VOLUME(32), SOUND_VOLUME(50){
+Game::Game() : WORLD_WIDTH(800), WORLD_HEIGHT(600), MUSIC_VOLUME(32), SOUND_VOLUME(50){
 	window = nullptr;
     renderer = nullptr;
+    logicalMouseX = logicalMouseY = 0;
 	fontSmall = nullptr;
 	fontMedium = nullptr;
 	fontLarge = nullptr;
     running = true;
+    isFullScreen = false;
     request = { 0,0,0,0 };
     gameState = PLAYING;
     score = 0;
     restartRect = { 340,325,120,50 };
     waveNumber = 1;
+    playerTextures = {};
 
     baseCount = 5;
     minInterval = 0.3;
@@ -27,7 +30,7 @@ Game::Game() : WINDOW_WIDTH(800), WINDOW_HEIGHT(600), MUSIC_VOLUME(32), SOUND_VO
     speedMultiplier = 0.20;
     maxEnemiesPerWave = 50;
 
-    bgRect = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
+    bgRect = { 0,0,WORLD_WIDTH,WORLD_HEIGHT };
     bgSurface = nullptr;
     bgTexture = nullptr;
 
@@ -43,11 +46,12 @@ void Game::init() {
         "ZombieLand Survival",
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED, 
-        WINDOW_WIDTH, WINDOW_HEIGHT,
+        WORLD_WIDTH, WORLD_HEIGHT,
         SDL_WINDOW_SHOWN
     );
     
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_RenderSetLogicalSize(renderer, WORLD_WIDTH, WORLD_HEIGHT);
 
     int requestedFlags = IMG_INIT_PNG;
     int flags = IMG_Init(requestedFlags);
@@ -135,6 +139,21 @@ void Game::run() {
     }
 }
 
+void Game::toggleFullScreen() {
+    if (isFullScreen) {
+        if (SDL_SetWindowFullscreen(window, 0) != 0) {
+            std::cout << SDL_GetError() << std::endl;
+            isFullScreen = !isFullScreen;
+        }
+    }
+    else{
+        if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP) != 0) {
+            std::cout << SDL_GetError() << std::endl;
+            isFullScreen = !isFullScreen;
+        }
+    }
+}
+
 void Game::startWave(int waveNumber) {
     int enemyNumber;
     float spawnInterval;
@@ -155,20 +174,25 @@ void Game::restart() {
     request = { 0,0,0,0 };
     gameState = PLAYING;
     score = 0;
-    waveNumber = 1;
-    bgRect = { 0,0,WINDOW_WIDTH,WINDOW_HEIGHT };
+    waveNumber = 7;
+    bgRect = { 0,0,WORLD_WIDTH,WORLD_HEIGHT };
 }
 
 void Game::update(float deltaTime){
+    SDL_RenderWindowToLogical(renderer,Input::mx, Input::my, &logicalMouseX, &logicalMouseY);
+    if (Input::toggleFullScreenPressed) {
+        toggleFullScreen();
+        Input::toggleFullScreenPressed = false;
+    }
     if (gameState == PLAYING) {
-
-        player.update(Input::movement, Input::mx, Input::my, Input::wantsToShoot, deltaTime);
+    
+        player.update(Input::movement, logicalMouseX, logicalMouseY, Input::wantsToShoot, deltaTime);
         if (player.hasShootRequest()) {
             request = player.consumeShootRequest();
             audioManager.playSound("gunshot");
             entityManager.createBullet(request);
         }
-        score += entityManager.update(player.rect, deltaTime);
+        score += entityManager.update(player.hitbox, deltaTime);
         if (entityManager.hasPlayerDied()) {
             gameState = GAME_OVER;
             audioManager.playSound("gameOver");
@@ -187,14 +211,14 @@ void Game::update(float deltaTime){
         if (Input::keyPressed(SDL_SCANCODE_R)) {
             restart();
         }
-        if ((Input::wantsToShoot)&&(Input::mx >= restartRect.x && Input::mx <= (restartRect.x + restartRect.w)) && (Input::my >= restartRect.y && Input::my <= (restartRect.y + restartRect.h))) {
+        if ((Input::wantsToShoot)&&(logicalMouseX >= restartRect.x && logicalMouseX <= (restartRect.x + restartRect.w)) && (logicalMouseY >= restartRect.y && logicalMouseY <= (restartRect.y + restartRect.h))) {
             restart();
         }
     }
 }
 void Game::render(){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(renderer);   
     std::string scoreStr = "Score: " + std::to_string(score);
     std::string waveStr = "Wave: " + std::to_string(waveNumber-1);
     if (gameState == PLAYING) {
@@ -284,7 +308,7 @@ void Game::render(){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
         SDL_RenderFillRect(renderer, &restartRect);
 
-        if ((Input::mx >= restartRect.x && Input::mx <= (restartRect.x + restartRect.w)) && (Input::my >= restartRect.y && Input::my <= (restartRect.y + restartRect.h))){
+        if ((logicalMouseX >= restartRect.x && logicalMouseX <= (restartRect.x + restartRect.w)) && (logicalMouseY >= restartRect.y && logicalMouseY <= (restartRect.y + restartRect.h))){
             surface = TTF_RenderText_Shaded(fontSmall, "Restart (R)", { 255,255,255,255 }, { 255,255,255,150 });
         }
         else {
